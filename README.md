@@ -83,6 +83,22 @@ At its core, it’s about turning one static blueprint into a living guide — k
 
 ---
 
+## 📷 Screenshots
+
+**Home page:**
+
+![Home Page](assets/homepage.png)
+
+**Register page:**
+
+![Register Page](assets/register-page.png)
+
+**Login page:**
+
+![Login Page](assets/login-page.png)
+
+---
+
 ## 🧑‍💻 Author
 
 **Merced Gonzales III**
