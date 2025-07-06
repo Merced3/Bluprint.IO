@@ -1,0 +1,13 @@
+# .gitignore
+bin/
+obj/
+*.user
+*.vspscc
+*.vssscc
+*.suo
+*.DS_Store
+.vs/
+*.db
+secrets.json
+appsettings.json
+appsettings.*.json
