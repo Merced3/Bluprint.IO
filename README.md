@@ -97,6 +97,10 @@ At its core, it’s about turning one static blueprint into a living guide — k
 
 ![Login Page](assets/login-page.png)
 
+**Profile page:**
+
+![Login Page](assets/profile-page.png)
+
 ---
 
 ## 🧑‍💻 Author
