@@ -1,8 +1,41 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@if (User?.Identity != null && User.Identity.IsAuthenticated)
+{
+    <div class="container text-center my-5">
+        <h1>Welcome back, @User.Identity.Name!</h1>
+        <p>Ready to mark up your next project?</p>
+        <a href="#" class="btn btn-success btn-lg">Upload New Blueprint</a>
+    </div>
+}
+else
+{
+    <section class="hero text-center py-5">
+        <h1 class="display-4">Bring Your Blueprints to Life</h1>
+        <p class="lead">Upload, mark up, and collaborate anywhere, anytime.</p>
+        <a href="/Identity/Account/Register" class="btn btn-primary btn-lg">Get Started Free</a>
+    </section>
+
+    <section class="features container py-5">
+        <div class="row text-center">
+            <div class="col-md-4">
+                <h3>Upload</h3>
+                <p>Blueprints, drawings, photos — all in one place.</p>
+            </div>
+            <div class="col-md-4">
+                <h3>Mark Up</h3>
+                <p>Place pins, add notes, attach specs.</p>
+            </div>
+            <div class="col-md-4">
+                <h3>Access</h3>
+                <p>Any device, any time — your plans on the go.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="text-center py-4">
+        <small>&copy; 2025 Bluprint.IO</small>
+    </footer>
+}
