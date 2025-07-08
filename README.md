@@ -89,6 +89,10 @@ At its core, it’s about turning one static blueprint into a living guide — k
 
 ![Home Page](assets/homepage.png)
 
+**Dashboard:** *(When Logged in)*
+
+![Dashboard Page](assets/dashboard-page.png)
+
 **Register page:**
 
 ![Register Page](assets/register-page.png)

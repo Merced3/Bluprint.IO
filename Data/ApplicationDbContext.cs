@@ -10,5 +10,7 @@ namespace Bluprint.IO.Data
             : base(options)
         {
         }
+
+        public DbSet<Blueprint> Blueprints { get; set; }
     }
 }
