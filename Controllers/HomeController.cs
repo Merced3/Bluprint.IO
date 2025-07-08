@@ -46,4 +46,32 @@ public class HomeController : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateBlueprint(BlueprintCreateViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            // TODO: Better error handling later
+            return RedirectToAction("Index");
+        }
+
+        var userId = _userManager.GetUserId(User);
+
+        var blueprint = new Blueprint
+        {
+            Title = model.Title,
+            Description = model.Description,
+            Type = model.Type,
+            OwnerId = userId,
+            CreatedAt = DateTime.UtcNow,
+            IsPublic = false
+            // FilePath & Thumbnail can be added later
+        };
+
+        _context.Blueprints.Add(blueprint);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("Index");
+    }
 }

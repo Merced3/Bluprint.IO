@@ -9,21 +9,71 @@
     <div class="container text-center my-5">
         <h1>Welcome back, @User.Identity.Name!</h1>
         <p>Ready to mark up your next project?</p>
-        <a href="#" class="btn btn-success btn-lg">Create New Project</a>
+        <a href="#" class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#createBlueprintModal">Create New Project</a>
     </div>
-    
+
+    <!-- Create New Project Modal -->
+    <div class="modal fade" id="createBlueprintModal" tabindex="-1" aria-labelledby="createBlueprintModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form asp-controller="Home" asp-action="CreateBlueprint" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createBlueprintModalLabel">Create New Project</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="mb-3">
+                            <label for="Title" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="Title" name="Title" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Description" class="form-label">Description (optional)</label>
+                            <textarea class="form-control" id="Description" name="Description"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Type</label>
+                            <select class="form-select" id="Type" name="Type" required>
+                                <option value="TwoD" selected>2D</option>
+                                <option value="ThreeD" disabled>3D (In Development)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Start</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     @if (Model.Blueprints != null && Model.Blueprints.Any())
     {
         <div class="row">
             @foreach (var blueprint in Model.Blueprints)
             {
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <img src="@blueprint.ThumbnailUrl" class="card-img-top" alt="Blueprint thumbnail">
-                        <div class="card-body">
-                            <h5 class="card-title">@blueprint.Title</h5>
-                            <p class="card-text">@blueprint.Description</p>
-                            <a href="/Blueprint/View/@blueprint.Id" class="btn btn-primary btn-sm">View</a>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card p-3">
+                        <div class="d-flex align-items-center justify-content-between">
+                            @if (!string.IsNullOrEmpty(blueprint.ThumbnailUrl))
+                            {
+                                <img src="@blueprint.ThumbnailUrl"
+                                    alt="Blueprint thumbnail"
+                                    class="img-thumbnail rounded me-3"
+                                    style="width: 80px; height: 80px; object-fit: cover;" />
+                            }
+
+                            <div class="flex-grow-1">
+                                <h5 class="card-title mb-1">@blueprint.Title</h5>
+                                <p class="card-text small mb-0">@blueprint.Description</p>
+                            </div>
+
+                            <div class="ms-3">
+                                <a href="/Blueprint/View/@blueprint.Id" class="btn btn-primary btn-sm">View</a>
+                            </div>
                         </div>
                     </div>
                 </div>
