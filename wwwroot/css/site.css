@@ -48,27 +48,36 @@ body {
 
 .editor-canvas {
   position: absolute;
-  top: 41px;
+  top: 41px; /* match header height */
   left: 0;
   width: 100vw;
-  height: calc(100vh - 50px);
+  height: calc(100vh - 41px);
   overflow: hidden;
 }
 
-.infinite-grid {
-  width: 100%;
-  height: 100%; 
+.grid-layer {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   background-color: #f8f9fa;
   background-image:
     linear-gradient(#ddd 1px, transparent 1px),
     linear-gradient(90deg, #ddd 1px, transparent 1px);
   background-size: 40px 40px;
-  position: relative;
+  background-repeat: repeat;
+  z-index: 0;
 }
 
-.infinite-grid img {
-  position: absolute;  /* 👈 keeps it on top of the grid */
-  top: 50%;
-  left: 50%;
+.content-layer {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 1;
+  touch-action: none; /* Prevent native pinch-zoom */
+}
+
+.content-layer img {
+  position: absolute;
+  top: 50%; left: 50%;
   transform: translate(-50%, -50%);
 }

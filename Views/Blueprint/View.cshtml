@@ -9,10 +9,11 @@
 }
 
 <div class="editor-canvas">
-    <div class="infinite-grid position-relative">
+    <div class="grid-layer"></div>
+    <div class="content-layer">
         @if (!string.IsNullOrEmpty(Model.FilePath))
         {
-            <img src="@Model.FilePath" alt="Blueprint" class="img-fluid w-100" />
+            <img src="@Model.FilePath" alt="Blueprint" class="blueprint-img" />
         }
     </div>
 </div>
