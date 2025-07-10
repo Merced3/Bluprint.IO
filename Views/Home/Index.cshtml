@@ -67,8 +67,12 @@
                             }
 
                             <div class="flex-grow-1">
-                                <h5 class="card-title mb-1">@blueprint.Title</h5>
-                                <p class="card-text small mb-0">@blueprint.Description</p>
+                                <h5 class="card-title mb-1">
+                                    @(blueprint.Title?.Length > 30 ? blueprint.Title.Substring(0, 30) + "..." : blueprint.Title)
+                                </h5>
+                                <p class="card-text small mb-0">
+                                    @(blueprint.Description?.Length > 60 ? blueprint.Description.Substring(0, 60) + "..." : blueprint.Description)
+                                </p>
                             </div>
 
                             <div class="ms-3">

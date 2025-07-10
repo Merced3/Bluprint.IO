@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>@ViewData["Title"]</title>
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    </head>
+    <body>
+        <header class="editor-toolbar">
+            <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-0">
+                <div class="container-fluid">
+                    <div class="d-flex w-100 justify-content-between">
+                        <!-- Left side -->
+                        <div id="toolbar-left">
+                            <button id="recenterBtn" 
+                            class="btn btn-light btn-sm">
+                            ◭ Re-center
+                            </button>
+                        </div>
+
+                        <!-- Right side -->
+                        <div id="toolbar-right">
+                            <button type="button"
+                                class="btn btn-primary btn-sm"
+                                data-bs-toggle="modal"
+                                data-bs-target="#projectInfoModal">
+                                •••
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        @RenderBody()
+
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </body>
+</html>
