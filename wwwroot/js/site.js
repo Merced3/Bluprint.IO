@@ -84,8 +84,14 @@
   });
 
   function updateTransform() {
+    scale = Math.max(Math.min(scale, 5), 0.2);
+    
     contentLayer.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
     contentLayer.style.transformOrigin = '0 0';
+    
     gridLayer.style.backgroundPosition = `${translateX}px ${translateY}px`; // only pan grid, don't scale it
+
+    const baseGridSize = 40;
+    gridLayer.style.backgroundSize = `${baseGridSize * scale}px ${baseGridSize * scale}px`;
   }
 });
