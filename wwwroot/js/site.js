@@ -11,13 +11,18 @@
   const crosshair = document.querySelector('.crosshair');
   const crossX = document.querySelector('.crosshair-horizontal');
   const crossY = document.querySelector('.crosshair-vertical');
+  crosshair.style.display = 'none';
+  
   let crosshairActive = false;
   let isDraggingCrosshair = false;
   let crosshairX = window.innerWidth / 2;
   let crosshairY = window.innerHeight / 2;
 
+  let isTouchInput = false;
+
   // ---- Mouse pan ----
   contentLayer.addEventListener('mousedown', (e) => {
+    isTouchInput = false;
     if (crosshairActive) {
       isDraggingCrosshair = true;
       startX = e.clientX - crosshairX;
@@ -30,6 +35,7 @@
   });
 
   window.addEventListener('mousemove', (e) => {
+    if (isTouchInput) return; // ignore mousemove if touch was used recently
     if (crosshairActive) {
       updateCrosshairPosition(e.clientX, e.clientY);
     } else if (isPanning) {
@@ -58,6 +64,7 @@
   let lastTouch = { x: 0, y: 0 };
 
   contentLayer.addEventListener('touchstart', (e) => {
+    isTouchInput = true;
     if (crosshairActive && e.touches.length === 1) {
       isDraggingCrosshair = true;
       lastTouch.x = e.touches[0].clientX;
@@ -132,8 +139,11 @@
   }
 
   function updateCrosshairPosition(x, y) {
-    crossX.style.top = `${y}px`;
-    crossY.style.left = `${x}px`;
+    const canvasRect = document.querySelector('.editor-canvas').getBoundingClientRect();
+    const offsetX = x - canvasRect.left;
+    const offsetY = y - canvasRect.top;
+    crossX.style.top = `${offsetY}px`;
+    crossY.style.left = `${offsetX}px`;
   }
 
   document.getElementById('cancelCrosshairBtn').addEventListener('click', () => {
@@ -167,4 +177,20 @@
     isDraggingCrosshair = false;
     isPanning = false;
   });
+
+  contentLayer.addEventListener('click', (e) => {
+    if (!crosshairActive) return;
+
+    const canvasRect = document.querySelector('.editor-canvas').getBoundingClientRect();
+    const x = e.clientX - canvasRect.left;
+    const y = e.clientY - canvasRect.top;
+
+    console.log(`📍 Crosshair clicked at: (${x.toFixed(2)}, ${y.toFixed(2)})`);
+
+    // Deactivate crosshair just like cancel
+    crosshairActive = false;
+    crosshair.style.display = 'none';
+    cancelBtn.style.display = 'none';
+  });
+
 });

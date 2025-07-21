@@ -118,6 +118,7 @@ body {
   width: 100%;
   height: 0;
   border-top: 2px dotted black;
+  transform: translateY(-50%);
 }
 
 .crosshair-vertical {
