@@ -12,5 +12,6 @@ namespace Bluprint.IO.Data
         }
 
         public DbSet<Blueprint> Blueprints { get; set; }
+        public DbSet<Pin> Pins { get; set; }
     }
 }

@@ -19,5 +19,6 @@ namespace Bluprint.IO.Models
 
         public string? OwnerId { get; set; }
         public ApplicationUser? Owner { get; set; }
+        public ICollection<Pin>? Pins { get; set; }
     }
 }
