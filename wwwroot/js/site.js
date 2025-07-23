@@ -1,24 +1,35 @@
 ﻿document.addEventListener('DOMContentLoaded', () => {
+  // ===================== 🧩 Constants & State =====================
+  const ZOOM_SENSITIVITY = 0.001;
+  const MAX_SCALE = 5;
+  const MIN_SCALE = 0.2;
+
   const gridLayer = document.querySelector('.grid-layer');
   const contentLayer = document.querySelector('.content-layer');
+  const blueprintImage = document.querySelector('.blueprint-img');
   const recenterBtn = document.getElementById('recenterBtn');
-  
-  let isPanning = false;
-  let startX = 0, startY = 0;
-  let translateX = 0, translateY = 0;
-  let scale = 1;
-
   const crosshair = document.querySelector('.crosshair');
   const crossX = document.querySelector('.crosshair-horizontal');
   const crossY = document.querySelector('.crosshair-vertical');
-  crosshair.style.display = 'none';
-  
-  let crosshairActive = false;
+  const activateBtn = document.getElementById('activateCrosshairBtn');
+  const cancelBtn = document.getElementById('cancelCrosshairBtn');
+  const form = document.querySelector('form[asp-action="UpdateInfo"]');
+
+  let scale = 1;
+  let isPanning = false;
   let isDraggingCrosshair = false;
+  let crosshairActive = false;
+  let hasSavedPins = false;
+  let isTouchInput = false;
   let crosshairX = window.innerWidth / 2;
   let crosshairY = window.innerHeight / 2;
+  let startX = 0, startY = 0;
+  let translateX = 0, translateY = 0;
+  let lastTouchDistance = null;
+  let lastTouch = { x: 0, y: 0 };
+  let pendingPins = [];
 
-  let isTouchInput = false;
+  crosshair.style.display = 'none';
 
   // ---- Mouse pan ----
   contentLayer.addEventListener('mousedown', (e) => {
@@ -60,9 +71,6 @@
   });
 
   // ---- Touch pan & pinch zoom ----
-  let lastTouchDistance = null;
-  let lastTouch = { x: 0, y: 0 };
-
   contentLayer.addEventListener('touchstart', (e) => {
     isTouchInput = true;
     if (crosshairActive && e.touches.length === 1) {
@@ -146,15 +154,24 @@
     crossY.style.left = `${offsetX}px`;
   }
 
+  function getImageRelativeCoordinates(x, y) {
+    const canvasRect = contentLayer.getBoundingClientRect();
+    
+    const imageCenterX = canvasRect.left + canvasRect.width / 2 + translateX;
+    const imageCenterY = canvasRect.top + canvasRect.height / 2 + translateY;
+
+    const offsetX = (x - imageCenterX) / scale;
+    const offsetY = (y - imageCenterY) / scale;
+
+    return { x: offsetX, y: offsetY };
+  }
+
   document.getElementById('cancelCrosshairBtn').addEventListener('click', () => {
     crosshairActive = false;
     crosshair.style.display = 'none';
     isDraggingCrosshair = false;
     isPanning = false;
   });
-
-  const activateBtn = document.getElementById('activateCrosshairBtn');
-  const cancelBtn = document.getElementById('cancelCrosshairBtn');
 
   activateBtn.addEventListener('click', () => {
     crosshairActive = true;
@@ -181,16 +198,72 @@
   contentLayer.addEventListener('click', (e) => {
     if (!crosshairActive) return;
 
-    const canvasRect = document.querySelector('.editor-canvas').getBoundingClientRect();
-    const x = e.clientX - canvasRect.left;
-    const y = e.clientY - canvasRect.top;
+    console.log(`Crosshair screen: (${crosshairX}, ${crosshairY})`);
+    const { x: relX, y: relY } = getImageRelativeCoordinates(crosshairX, crosshairY);
+    console.log(`Pin image-relative: (${relX.toFixed(2)}, ${relY.toFixed(2)})`);
+    
+    const pin = { x: relX, y: relY };
+    renderPin(pin);
+    pendingPins.push(pin);
 
-    console.log(`📍 Crosshair clicked at: (${x.toFixed(2)}, ${y.toFixed(2)})`);
-
-    // Deactivate crosshair just like cancel
+    // Deactivate crosshair just like cancel button
     crosshairActive = false;
     crosshair.style.display = 'none';
     cancelBtn.style.display = 'none';
   });
+
+  function renderPin(pinData) {
+    const { x, y } = pinData;
+
+    const canvasWidth = contentLayer.getBoundingClientRect().width;
+    const canvasHeight = contentLayer.getBoundingClientRect().height;
+
+    const centerX = canvasWidth / 2;
+    const centerY = canvasHeight / 2;
+
+    const el = document.createElement('div');
+    el.className = 'pin-marker';
+    el.style.position = 'absolute';
+    el.style.left = `${centerX + x * scale}px`;
+    el.style.top = `${centerY + y * scale}px`;
+    el.innerHTML = '📍'; // Or use a styled circle/button/icon
+    el.dataset.relX = x;
+    el.dataset.relY = y;
+
+    contentLayer.appendChild(el);
+  }
+
+  form.addEventListener('submit', function (e) {
+    if (hasSavedPins || pendingPins.length === 0) return;
+
+    const blueprintId = parseInt(form.querySelector('input[name="Id"]').value);
+
+    const payload = pendingPins.map(pin => ({
+      x: pin.x,
+      y: pin.y,
+      label: pin.label || "",
+      description: pin.description || "",
+      blueprintId
+    }));
+
+    // Delay a bit to let the form POST happen first
+    setTimeout(() => {
+      fetch('/Blueprint/SavePins', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to save pins');
+        console.log('✅ Pins saved to DB');
+        pendingPins.length = 0;  // Clear pin list
+        hasSavedPins = true;     // Prevent double-saving
+      })
+      .catch(err => {
+        console.error('❌ Failed to save pins:', err);
+      });
+    }, 500);
+  });
+
 
 });

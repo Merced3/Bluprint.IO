@@ -71,5 +71,17 @@ namespace Bluprint.IO.Controllers
 
             return RedirectToAction("View", new { id = blueprint.Id });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> SavePins([FromBody] List<Pin> pins)
+        {
+            if (pins == null || !pins.Any())
+                return BadRequest("No pins received");
+
+            _context.Pins.AddRange(pins);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
     }
 }

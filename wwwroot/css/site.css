@@ -129,3 +129,11 @@ body {
   border-left: 2px dotted black;
   transform: translateX(-50%);
 }
+
+.pin-marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  font-size: 24px;
+  z-index: 11;
+}
